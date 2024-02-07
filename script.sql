@@ -1,5 +1,5 @@
---create schema if not exists ouldnetflix;
---set schema 'ouldnetflix';
+create schema if not exists ouldnetflix;
+set schema 'ouldnetflix';
 
 -- Eliminacion de tablas existentes
 /*
@@ -33,11 +33,11 @@ create table if not exists socio (
   ID smallserial primary key,
   Nombre varchar(25) not null,
   Apellidos varchar(50) not null,
-  Email varchar(30) not null,
+  Email varchar(50) not null,
   Fecha_Nacimiento date,
   Telefono varchar(50) not null,
-  Fecha_Matriculacuion date default current_date,
-  ID_Identificate smallserial references identificador(ID),
+  Fecha_Matriculacion date default current_date,
+  ID_Identificacion smallserial references identificador(ID),
   ID_Direccion smallserial references direccion(ID)
 );
 
@@ -56,8 +56,8 @@ create table if not exists director (
 
 create table if not exists pelicula (
   ID smallserial primary key,
-  Titulo varchar(25) not null,
-  Publicacion date not null,
+  Titulo varchar(80) not null,
+  Publicacion date,
   Sinopsis text,
   Copias smallint not null,
   ID_Genero smallserial,
@@ -65,7 +65,6 @@ create table if not exists pelicula (
 );
 
 alter table pelicula add constraint FK_ID_Genero foreign key (ID_Genero) references genero (ID);
-alter table pelicula add constraint UNIC_ID_Directtor unique (ID_Director);
 alter table pelicula add constraint FK_ID_Directo foreign key (ID_Director) references director (ID);
 
 create table if not exists prestamo (
@@ -87,7 +86,35 @@ select distinct tv.dni from tmp_videoclub tv;
 -- Genero
 insert into genero (genero)
 select distinct tv.genero from tmp_videoclub tv;
-
+-- Director
+insert into director (nombre, apellido)
+select distinct split_part(tv.director, ' ', 1) as name, split_part(tv.director, ' ', 2) as apellido from tmp_videoclub tv;
+-- Socio 
+insert into socio (
+  Nombre,
+  Apellidos,
+  Email,
+  Fecha_Nacimiento,
+  Telefono,
+  ID_Identificate,
+  ID_Direccion
+)
+select distinct tv.nombre, concat(tv.apellido_1, ' ', tv.apellido_2) as apellidos, tv.email, cast (tv.fecha_nacimiento as date),
+tv.telefono, i.id as ID_identificacion, d.id as ID_Direccion 
+from tmp_videoclub tv 
+join identificador i on i.dni = tv.dni
+join direccion d on d.calle = tv.calle and cast (d.numero as varchar) = tv.numero; 
+-- Pelicula
+insert into pelicula (titulo, sinopsis, copias, id_genero, id_director)
+select tv.titulo, tv.sinopsis, count(tv.titulo) as Copias, g.id as genero_id, d.id as director_id from tmp_videoclub tv
+join genero g on g.genero = tv.genero
+join director d on concat(d.nombre, ' ', d.apellido) = tv.director
+group by tv.titulo, TV.sinopsis, g.id, d.id;
+-- Prestamo
+insert into prestamo (fecha_prestamo, fecha_devolucion, id_pelicula, id_socio)
+select distinct tv.fecha_alquiler, tv.fecha_devolucion, p.id as Pelicula_ID, s.id as Socio_ID from tmp_videoclub tv
+join pelicula p on p.titulo = tv.titulo
+join socio s on s.email = tv.email;
 
 
 -- TRIGGER
