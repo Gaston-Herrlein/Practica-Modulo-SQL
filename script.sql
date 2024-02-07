@@ -17,6 +17,7 @@ drop table if exists direccion;
 create table if not exists identificador (
   ID smallserial primary key,
   DNI varchar(20),
+  NIE varchar(20),
   Pasaporte varchar(20)
 );
 
@@ -63,7 +64,6 @@ create table if not exists pelicula (
   ID_Genero smallserial,
   ID_Director smallserial
 );
-
 alter table pelicula add constraint FK_ID_Genero foreign key (ID_Genero) references genero (ID);
 alter table pelicula add constraint FK_ID_Directo foreign key (ID_Director) references director (ID);
 
