@@ -115,25 +115,42 @@ insert into prestamo (fecha_prestamo, fecha_devolucion, id_pelicula, id_socio)
 select distinct tv.fecha_alquiler, tv.fecha_devolucion, p.id as Pelicula_ID, s.id as Socio_ID from tmp_videoclub tv
 join pelicula p on p.titulo = tv.titulo
 join socio s on s.email = tv.email;
+--SCRIPT PARA ACTUALIZAR COPIAS DE PELICULAS
+update pelicula set copias = ( 
+select SUM(case when prestamo.fecha_devolucion is not null then 1 else 0 end) from prestamo where pelicula.id = prestamo.id_pelicula
+)
+where exists(
+    select 1
+    from prestamo p
+    where pelicula.id = p.id_pelicula
+);
 
 
--- TRIGGER
-/*
-create function actualizar_copias() return trigger
-as $$
+-- FUNCTION TRIGGER
+create function actualizar_copias()
+returns trigger as $$
 begin
-	select ID_pelicula from pelicula 
-	update pelicula set Copias = (pelicula.Copias - 1) where ID = old.ID;
+	update pelicula
+	set copias = ( 
+	select SUM(case when prestamo.fecha_devolucion is not null then 1 else 0 end) from prestamo where new.id = prestamo.id_pelicula
+	)
+	where exists(
+    	select 1
+    	from prestamo p
+    	where new.id = p.id_pelicula
+	);
+
 	return new;
-end
+end;
 $$
-language plpgsql
-
-create trigger TR_sumar_copias before insert on Prestamo
+language plpgsql;
+-- DEFINITION TRIGGER
+create trigger TR_Actualizar_copias
+after update on prestamo
 for each row
-execute procedure actualizar_copias
-*/
-
+when(new.prestamo is not null)
+execute function 
+execute function TR_Actualizar_copias();
 
 
 -- Tamaño ocupado en la DB
