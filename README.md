@@ -24,3 +24,4 @@ Se debera implementar una BBDD que cumpla los siguientes requisitos:
 8. Se decide separar el **Identificacor** en una tabla aparte, entendiendo que se pueden registar o con el DNI/NIE, o con el NIF, o con el Pasaporte (esto con el proposito de ampliar las opciones de identificación). De esta forma ampliamos la posibilidad de traer socios de otrso sitios, con sus respectivos "Idenificadores" y no solamente por registro directo.
 9. Se agrega un campo _Fecah_Matriculacion_ ya que podria ser interesantea saber cuando se hizo socio del videoclub.
 10. Para cada constraint intente hicerlos de varias maneras
+11. Al completar la tabla de peliculas conte todos los prestamos de peliculas (ya sea que fueron devueltas o no) para obtener el total de peliculas en stock. Esto simplemente por simplicidad. Luego con un trigger actualizo las tablas;
