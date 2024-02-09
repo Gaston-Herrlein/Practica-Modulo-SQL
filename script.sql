@@ -117,7 +117,7 @@ join pelicula p on p.titulo = tv.titulo
 join socio s on s.email = tv.email;
 --SCRIPT PARA ACTUALIZAR COPIAS DE PELICULAS
 update pelicula set copias = ( 
-select SUM(case when prestamo.fecha_devolucion is not null then 1 else 0 end) from prestamo where pelicula.id = prestamo.id_pelicula
+select SUM(case when prestamo.fecha_devolucion is not null then 1 else -1 end) from prestamo where pelicula.id = prestamo.id_pelicula
 )
 where exists(
     select 1
@@ -125,14 +125,13 @@ where exists(
     where pelicula.id = p.id_pelicula
 );
 
-
 -- FUNCTION TRIGGER
-create function actualizar_copias()
-returns trigger as $$
+create or replace function actualizar_copias()
+returns trigger as $actualizar_copias$
 begin
 	update pelicula
 	set copias = ( 
-	select SUM(case when prestamo.fecha_devolucion is not null then 1 else 0 end) from prestamo where new.id = prestamo.id_pelicula
+	select SUM(case when prestamo.fecha_devolucion is not null then 1 else -1 end) from prestamo where new.id = prestamo.id_pelicula
 	)
 	where exists(
     	select 1
@@ -141,17 +140,43 @@ begin
 	);
 
 	return new;
-end;
-$$
+end
+$actualizar_copias$
 language plpgsql;
 -- DEFINITION TRIGGER
 create trigger TR_Actualizar_copias
-after update on prestamo
+after insert or update on prestamo
 for each row
-when(new.prestamo is not null)
-execute function 
-execute function TR_Actualizar_copias();
+execute function actualizar_copias();
 
+--ELIMINAR TRIGGER
+--drop trigger if exists TR_Actualizar_copias on prestamo;
+
+--PRUEBA TRIGGER nº1
+insert into prestamo (id_pelicula, id_socio) values (90, 30);
+select * from prestamo p where p.id_pelicula  = 90;
+select * from pelicula p where p.id=90;
+
+--PRUEBA TRIGGER nº2
+update prestamo set fecha_devolucion = current_date where id > 495; 
+select * from prestamo p where p.id_pelicula  = 90;
+select * from pelicula p where p.id=90;
+
+--CORROBORAR LOS VALORES DE LAS QUERYS DE ARRIBA PARA SABER SI SE DISPARA EL TRIGGER
+SELECT
+    p.id_pelicula,
+    COUNT(p.id_pelicula) AS cantidad_total,
+    SUM(CASE WHEN p.fecha_devolucion IS NOT NULL THEN 1 ELSE -1 END) AS devueltas
+FROM
+    prestamo p
+GROUP BY
+    p.id_pelicula;
+
+
+
+
+--Version de Posgresql
+--select version();
 
 -- Tamaño ocupado en la DB
 /*select pg_size_pretty(pg_database_size(current_database())) AS size;*/
