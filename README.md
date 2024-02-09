@@ -12,16 +12,7 @@ Se debera implementar una BBDD que cumpla los siguientes requisitos:
 
 # Solucion
 
-### En esta seccion voy explicar el porque de cada decisión que tomé en la creación de la BBDD
+En esta rama mi objetivo es concluir con mi idea original que era hacer uso del trigger para llevar las cuentas de las copias de las peliculas.
+Esto pretendia hacerlo para llevar lo aprendido en el modulo un escalon mas arriba.
 
-1. Se crea una tabla para director entendiendo que un director puede dirigir varias peliculas.
-2. La relacion de _Socio_ con _Identificador_ y _Socio_ con _Direccion_ se plantea como 1 a 1 entendiendo que cada persona (socio) tiene 1 unico _Identificador_ y una unica _Direccion_, para los fines practicos del videoclub.
-3. Para los campos que corresponden a fechas eh decidido utilizar el tipo de dato **Dates** ya que, en ninguno, se necesita la hora de la misma.
-4. Para los campor _ID_ correspondiente a las PK de cada tabla utilizo smallserial, que es un valor numerico autoincremental de 2 bytes (de 0 a 32767)
-5. Para los campos de texto se utiliza **Varchar[]** para delimitar la cantidad de caracteres y hacer un mejor uso del espacio de almacenamiento.
-6. Referente al punto anterior hay una excepción, el campo _Sinopsis_ de la tabla **Pelicula**. Esta es de tipo **Text** para no limitar el largo
-7. Para el campo _Numero_ de la tabla **Direccion** se utiliza el tipo de dato **Smallint** ya que con este tipo de datos podemos representar numeros hasta 32767 (se entiende que es un buen rango para una direccion)
-8. Se decide separar el **Identificacor** en una tabla aparte, entendiendo que se pueden registar o con el DNI/NIE, o con el NIF, o con el Pasaporte (esto con el proposito de ampliar las opciones de identificación). De esta forma ampliamos la posibilidad de traer socios de otrso sitios, con sus respectivos "Idenificadores" y no solamente por registro directo.
-9. Se agrega un campo _Fecah_Matriculacion_ ya que podria ser interesantea saber cuando se hizo socio del videoclub.
-10. Para cada constraint intente hicerlos de varias maneras
-11. Al completar la tabla de peliculas conte todos los prestamos de peliculas (ya sea que fueron devueltas o no) para obtener el total de peliculas en stock. Esto simplemente por simplicidad. Luego con un trigger actualizo las tablas;
+Por cuestiones de tiempo, y de complicaciones con la utilizacion del mismo, cambio el modelo de la base de datos en la rama main para precindir del uso de triggers.
