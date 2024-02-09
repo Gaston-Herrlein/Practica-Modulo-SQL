@@ -16,17 +16,17 @@ drop table if exists direccion;
 
 create table if not exists identificador (
   ID smallserial primary key,
-  DNI varchar(20),
+  DNI varchar(20) not null,
   NIE varchar(20),
   Pasaporte varchar(20)
 );
 
 create table if not exists direccion (
   ID smallserial,
-  Codigo_Postal varchar(5),
+  Codigo_Postal varchar(5) not null,
   Calle varchar(30) not null,
   Numero smallint not null,
-  Piso varchar(5),
+  Piso varchar(5) default 'N/A',
   primary key (ID)
 );
 
@@ -35,7 +35,7 @@ create table if not exists socio (
   Nombre varchar(25) not null,
   Apellidos varchar(50) not null,
   Email varchar(50) not null,
-  Fecha_Nacimiento date,
+  Fecha_Nacimiento date not null,
   Telefono varchar(50) not null,
   Fecha_Matriculacion date default current_date,
   ID_Identificacion smallserial references identificador(ID),
@@ -51,7 +51,7 @@ create table if not exists director (
   ID smallserial,
   Nombre varchar(25) not null,
   Apellido varchar(25) not null,
-  Nombre_Artistico varchar(15),
+  Nombre_Artistico varchar(15) default 'N/A',
   primary key(ID)
 )
 
@@ -59,19 +59,24 @@ create table if not exists pelicula (
   ID smallserial primary key,
   Titulo varchar(80) not null,
   Publicacion date,
-  Sinopsis text,
-  Copias smallint not null,
+  Sinopsis text not null,
   ID_Genero smallserial,
   ID_Director smallserial
 );
 alter table pelicula add constraint FK_ID_Genero foreign key (ID_Genero) references genero (ID);
 alter table pelicula add constraint FK_ID_Directo foreign key (ID_Director) references director (ID);
 
+create table if not exists Copia (
+  ID smallint primary key,
+  ID_Pelicula smallserial,
+  Is_Rented boolean default false
+)
+
 create table if not exists prestamo (
   ID smallserial primary key,
   Fecha_Prestamo date default current_date,
   Fecha_Devolucion date default null,
-  ID_Pelicula smallserial references pelicula(ID),
+  ID_Copia smallserial references pelicula(ID),
   ID_Socio smallserial references socio(ID)
 );
 
