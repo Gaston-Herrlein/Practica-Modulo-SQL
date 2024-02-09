@@ -25,3 +25,5 @@ Se debera implementar una BBDD que cumpla los siguientes requisitos:
 9. Se agrega un campo _Fecah_Matriculacion_ ya que podria ser interesantea saber cuando se hizo socio del videoclub.
 10. Para cada constraint intente hicerlos de varias maneras
 11. Al completar la tabla de peliculas conte todos los prestamos de peliculas (ya sea que fueron devueltas o no) para obtener el total de peliculas en stock. Esto simplemente por simplicidad. Luego con un trigger actualizo las tablas;
+
+12. LA FECHA DE PUBLICACION DE LAS PELICULAS LA DEJO COMO UN CAMPO NULO YA QUE NO SE PROPORCIONA ESTA INFORMACION EN LA TABLLA tmp_videoclub
