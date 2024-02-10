@@ -133,15 +133,32 @@ join socio s on s.email = tv.email;
 
 -- Queris de consultas
 
---Pelicula|Copias disponibles
+-- Pelicula | Copias disponibles
 select p.titulo, sum(case when c.is_available is true then 1 else 0 end) as copias_disponibles from copia c
 join pelicula p on p.id = c.id_pelicula
 group by p.id
 order by copias_disponibles desc;
+-- ID_SOCIO | NOMBRE | ....
+select s.id as id_socio, concat(s.nombre, ' ', s.apellidos) as nombre, count(genero.id)
+from socio s
+join prestamo on prestamo.id_socio = s.id
+join copia on copia.id = prestamo.id_copia
+join pelicula on pelicula.id = copia.id_pelicula 
+join genero on genero.id = pelicula.id_genero
+group by s.id
+order by s.id desc;
 
 
 
 
+select s.id as id_socio, concat(s.nombre, ' ', s.apellidos) as nombre, genero.genero, count(genero.id)
+from socio s
+join prestamo on prestamo.id_socio = s.id
+join copia on copia.id = prestamo.id_copia
+join pelicula on pelicula.id = copia.id_pelicula 
+join genero on genero.id = pelicula.id_genero
+group by s.id, genero.id
+order by s.id, count(genero.id) desc;
 
 
 --Version de Posgresql
