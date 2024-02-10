@@ -6,6 +6,7 @@ set schema 'ouldnetflix';
 drop table if exists director cascade;
 drop table if exists genero cascade;
 drop table if exists prestamo cascade;
+drop table if exists copia cascade;
 drop table if exists socio cascade;
 drop table if exists pelicula cascade;
 drop table if exists identificador cascade;
@@ -138,20 +139,8 @@ select p.titulo, sum(case when c.is_available is true then 1 else 0 end) as copi
 join pelicula p on p.id = c.id_pelicula
 group by p.id
 order by copias_disponibles desc;
--- ID_SOCIO | NOMBRE | ....
-select s.id as id_socio, concat(s.nombre, ' ', s.apellidos) as nombre, count(genero.id)
-from socio s
-join prestamo on prestamo.id_socio = s.id
-join copia on copia.id = prestamo.id_copia
-join pelicula on pelicula.id = copia.id_pelicula 
-join genero on genero.id = pelicula.id_genero
-group by s.id
-order by s.id desc;
-
-
-
-
-select s.id as id_socio, concat(s.nombre, ' ', s.apellidos) as nombre, genero.genero, count(genero.id)
+-- ID_SOCIO | NOMBRE | GENERO | VECES_ALQUILADO
+select s.id as N°_socio, concat(s.nombre, ' ', s.apellidos) as Socio, genero.genero, count(genero.id) as veces_alquilada
 from socio s
 join prestamo on prestamo.id_socio = s.id
 join copia on copia.id = prestamo.id_copia
