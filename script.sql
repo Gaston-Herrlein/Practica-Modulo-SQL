@@ -131,7 +131,17 @@ select distinct tv.fecha_alquiler, tv.fecha_devolucion, c.id as Copia_ID, s.id a
 join copia c on c.id = tv.id_copia
 join socio s on s.email = tv.email;
 
--- Queris de consultas 
+-- Queris de consultas
+
+--Pelicula|Copias disponibles
+select p.titulo, sum(case when c.is_available is true then 1 else 0 end) as copias_disponibles from copia c
+join pelicula p on p.id = c.id_pelicula
+group by p.id
+order by copias_disponibles desc;
+
+
+
+
 
 
 --Version de Posgresql
