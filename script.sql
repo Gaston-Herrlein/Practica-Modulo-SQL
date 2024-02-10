@@ -18,8 +18,8 @@ drop table if exists direccion cascade;
 create table if not exists identificador (
   ID smallserial primary key,
   DNI varchar(20) not null,
-  NIE varchar(20),
-  Pasaporte varchar(20)
+  NIE varchar(20) default 'N/A',
+  Pasaporte varchar(20) default 'N/A'
 );
 
 create table if not exists direccion (
