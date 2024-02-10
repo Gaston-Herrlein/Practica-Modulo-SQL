@@ -27,3 +27,7 @@ Se debera implementar una BBDD que cumpla los siguientes requisitos:
 11. Al completar la tabla de peliculas conte todos los prestamos de peliculas (ya sea que fueron devueltas o no) para obtener el total de peliculas en stock. Esto simplemente por simplicidad. Luego con un trigger actualizo las tablas;
 
 12. LA FECHA DE PUBLICACION DE LAS PELICULAS LA DEJO COMO UN CAMPO NULO YA QUE NO SE PROPORCIONA ESTA INFORMACION EN LA TABLLA tmp_videoclub
+13. UNA IDEA PARA MEJORAR LAS TABLAS SERIA AGRUPAR LA CLAVE PRIMARIA 'ID' CON 'ID_Pelicula'. DE ESTA FORMA EL ID PODRIA SER EL NUMERO DE LA COPIA CORRESPONDIENTE, QUE TIENE UN VALOR MAS SIGNIFICATIVO. EJ:
+
+- PARA _EL PADRINO_ PODRIAMOS TENER ID=1, ID=2, ID=3 EN FUNCION DE LA COPIA
+- PARA _EL CABALLERO OSCURO_ PODRIAMOS TENER ID=1, ID=2, ID=3 TAMBIEN, Y NO VIOLARIA LA CLAUSULA DE UNISIDAD DE PK YA QUE LA PK CONSTA DE 2 CAMPOS
